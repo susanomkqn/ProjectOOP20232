@@ -42,13 +42,27 @@ public class BM25 {
         }
         return termFrequency;
     }
-    }
+
 
     private double calculateInverseDocumentFrequency(List<List<String>> tokenizedCorpus, String term) {
-        return 0.0;
+        int documentFrequency = 0;
+        for (List<String> document : tokenizedCorpus) {
+            if (document.contains(term)) {
+                documentFrequency++;
+            }
+        }
+        double idf = Math.log((corpusSize - documentFrequency + 0.5) / (documentFrequency + 0.5));
+        return idf;
     }
 
     private double getAverageDocumentLength(List<List<String>> tokenizedCorpus) {
-        return 0.0;
+        int totalLength = 0;
+        for (List<String> document : tokenizedCorpus) {
+            totalLength += document.size();
+        }
+        return (double) totalLength / tokenizedCorpus.size();
     }
 }
+
+
+
