@@ -1,15 +1,50 @@
 package org.group9.news;
 
-public class News {
-    private String title;
-    private String url;
-    private String type;
-    private String author;
-     private String date;
-     private String tagname;
-     private String keyword;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindAndSplitByName;
 
-     private String contents;
+import java.util.List;
+
+public class News {
+    @CsvBindByName(column = "Title")
+    private String title;
+
+    @CsvBindByName(column = "URL")
+    private String url;
+
+    @CsvBindByName(column = "Type")
+    private String type;
+
+    @CsvBindByName(column = "Author")
+    private String author;
+
+    @CsvBindByName(column = "Date")
+    private String date;
+
+    @CsvBindByName(column = "TagName")
+    private String tagname;
+
+    @CsvBindByName(column = "Keyword")
+    private String keyword;
+
+    @CsvBindByName(column = "Detail Contents")
+    private String contents;
+
+    private List<String> tokens;
+
+    // Constructor
+    public News() {
+    }
+
+    // Getter và Setter cho các thuộc tính
+
+    public void setTokens(List<String> tokens) {
+        this.tokens = tokens;
+    }
+
+    public List<String> getTokens() {
+        return tokens;
+    }
 
     public String getTitle() {
         return title;

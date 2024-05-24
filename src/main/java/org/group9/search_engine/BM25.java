@@ -28,7 +28,7 @@ public class BM25 {
                 double bm25 = idf * tuso / mauso;
                 score += bm25;
             }
-            scores.add(score);
+            scores.set(i, score);
         }
         return scores;
     }
