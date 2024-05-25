@@ -7,7 +7,7 @@ public class QueryRunner {
 
     public static void main(String[] args) {
         // Khởi tạo SearchEngine với dữ liệu từ file CSV
-        SearchEngine searchEngine = new SearchEngine(CSVReader.readNewsFromCSV("NewsArticle.csv"));
+        SearchEngine searchEngine = new SearchEngine(CSVReader.readNewsFromCSV("Database.csv"));
 
         // Chuẩn bị corpus cho việc tìm kiếm
         searchEngine.prepareCorpus();

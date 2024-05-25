@@ -8,26 +8,25 @@ import org.jsoup.select.Elements;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Blog {
 
     public static void main(String[] args) {
-        String baseUrl = "https://aws.amazon.com/blogs/database/category/blockchain";
+        String baseUrl = "https://blockchainshiksha.com/blog/";
         String csvFile = "Blog.csv";
 
-        try {
-            // Create a CSV writer
-            CSVWriter writer = new CSVWriter(new FileWriter(csvFile));
-
+        try (CSVWriter writer = new CSVWriter(new FileWriter(csvFile))) {
             // Write header to the CSV file
             String[] header = {"Title", "URL", "Type", "Date", "Author", "DetailContents", "TagName", "KeyWord"};
             writer.writeNext(header);
 
-            for (int page = 2; page <= 8; page++) {
+            for (int page = 1; page <= 7; page++) {
                 String url = baseUrl + "/page/" + page;
                 Document doc = Jsoup.connect(url).get();
 
-                Elements articleHeaders = doc.select(".blog-post-title");
+                Elements articleHeaders = doc.select(".entry-title");
 
                 for (Element articleHeader : articleHeaders) {
                     Element link = articleHeader.selectFirst("a[href]");
@@ -37,36 +36,32 @@ public class Blog {
 
                     Document document = Jsoup.connect(Url).get();
 
-                    Elements datePublished = document.select("time[property=datePublished]");
+                    Elements datePublished = document.select("span[class = published]");
                     String date = datePublished.text();
 
-                    Elements authorNames = document.select("span[property=author]");
+                    Elements authorNames = document.select("span[class = author-name]");
                     StringBuilder authors = new StringBuilder();
                     for (Element authorName : authorNames) {
                         String author = authorName.text();
                         authors.append(author).append(", ");
                     }
 
-                    Elements detailContents = document.select("section[property=articleBody]");
+                    Elements detailContents = document.select("div[class = entry-content clear]");
                     String detailContent = detailContents.text();
 
-                    String tagName = "NULL";
-
-                    StringBuilder keyWords = new StringBuilder();
-                    Elements keywords = detailContents.select("a");
-                    for (Element key : keywords) {
-                        String keyWord = key.text();
-                        keyWords.append(keyWord).append(", ");
+                    Elements tag = document.select(".ast-terms-link");
+                    List<String> tags = new ArrayList<>();
+                    for (Element tagName : tag) {
+                        tags.add(tagName.text());
                     }
 
+                    String keyWords = "NULL";
+
                     // Write data to CSV file
-                    String[] data = {Title, Url, Type, date, authors.toString(), detailContent, tagName, keyWords.toString()};
+                    String[] data = {Title, Url, Type, date, authors.toString(), detailContent, tags.toString(), keyWords.toString()};
                     writer.writeNext(data);
                 }
             }
-
-            // Close the CSV writer
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
