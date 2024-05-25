@@ -29,7 +29,7 @@ public class News {
     private String keyword; // Có thể cần xử lý trước khi gán vào đối tượng
 
     @CsvBindByName(column = "Detail Contents")
-    private String contents; // Có thể cần xử lý trước khi gán vào đối tượng
+    private String detailContents; // Có thể cần xử lý trước khi gán vào đối tượng
 
     private List<String> tokens;
 
@@ -86,8 +86,9 @@ public class News {
     // Phương thức để chuyển đổi định dạng ngày tháng từ chuỗi sang Date hoặc LocalDateTime
 
     public void setDate(String date) {
-        // Thực hiện chuyển đổi định dạng ngày tháng và gán vào thuộc tính date
+        this.date = date;
     }
+
 
     public String getTagname() {
         return tagname;
@@ -107,13 +108,14 @@ public class News {
         // Thực hiện xử lý keyword trước khi gán vào thuộc tính keyword
     }
 
-    public String getContents() {
-        return contents;
+    public String getDetailContents() {
+        return detailContents;
     }
 
-    // Có thể cần xử lý trước khi gán vào thuộc tính contents
+    // Có thể cần xử lý trước khi gán vào thuộc tính detailContents
 
-    public void setContents(String contents) {
-        // Thực hiện xử lý contents trước khi gán vào thuộc tính contents
+    public void setDetailContents(String detailContents) {
+        this.detailContents = detailContents;
     }
+
 }

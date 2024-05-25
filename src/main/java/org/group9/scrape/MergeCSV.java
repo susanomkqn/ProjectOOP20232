@@ -16,6 +16,8 @@ public class MergeCSV {
         List<String> fileNames = new ArrayList<>();
         fileNames.add("NewsArticle.csv");
         fileNames.add("Blog.csv");
+        fileNames.add("NewsArticle2.csv");
+
         // Add more file names as needed
 
         List<String[]> allLines = new ArrayList<>();
