@@ -40,8 +40,20 @@ public class SearchEngine {
         // Get BM25 scores
         List<Double> scores = bm25.getScores(tokenizedCorpus, queryTokens);
 
-        // Print search results sorted by score
-        printSearchResults(scores);
+        // Filter out zero scores
+        List<Double> nonZeroScores = new ArrayList<>();
+        for (Double score : scores) {
+            if (score != 0.0) {
+                nonZeroScores.add(score);
+            }
+        }
+
+        // Print search results if there are non-zero scores, otherwise print no results message
+        if (!nonZeroScores.isEmpty()) {
+            printSearchResults(scores);
+        } else {
+            System.out.println("No results found.");
+        }
     }
 
     private List<List<String>> getTokenizedCorpus() {
@@ -68,13 +80,15 @@ public class SearchEngine {
         for (NewsScorePair pair : newsScorePairs) {
             News news = pair.getNews();
             double score = pair.getScore();
-            System.out.println("Title: " + news.getTitle());
-            System.out.println("URL: " + news.getUrl());
-            System.out.println("Detail Content: " + truncateDetailContent(news.getDetailContents()));
-            System.out.println("Date: " + news.getDate());
-            System.out.println("Author: " + news.getAuthor());
-            System.out.println("Score: " + score);
-            System.out.println();
+            if (score != 0.0) { // Only print if score is non-zero
+                System.out.println("Title: " + news.getTitle());
+                System.out.println("URL: " + news.getUrl());
+                System.out.println("Detail Content: " + truncateDetailContent(news.getDetailContents()));
+                System.out.println("Date: " + news.getDate());
+                System.out.println("Author: " + news.getAuthor());
+                System.out.println("Score: " + score);
+                System.out.println();
+            }
         }
     }
 
