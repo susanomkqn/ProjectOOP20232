@@ -9,8 +9,7 @@ import java.util.List;
 
 public class CSVReader {
 
-    public static List<News> readNewsFromCSV() {
-        String csvFilePath = "Database.csv";
+    public static List<News> readNewsFromCSV(String csvFilePath) {
         try (FileReader fileReader = new FileReader(csvFilePath)) {
             // Đọc dữ liệu từ file CSV và tạo danh sách tin tức
             List<News> corpus = new CsvToBeanBuilder<News>(fileReader)
