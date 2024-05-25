@@ -6,8 +6,8 @@ import org.group9.news.CSVReader; // Thêm import này
 public class QueryRunner {
 
     public static void main(String[] args) {
-        // Khởi tạo SearchEngine với dữ liệu từ file CSV
-        SearchEngine searchEngine = new SearchEngine(CSVReader.readNewsFromCSV("Database.csv"));
+        // Khởi tạo BasicSearchEngine với dữ liệu từ file CSV
+        SearchEngine searchEngine = new BasicSearchEngine(CSVReader.readNewsFromCSV("Database.csv"));
 
         // Chuẩn bị corpus cho việc tìm kiếm
         searchEngine.prepareCorpus();
