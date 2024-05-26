@@ -11,7 +11,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load Main.fxml
-        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
+        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("Main.fxml"));
         Parent mainRoot = mainLoader.load();
         Scene mainScene = new Scene(mainRoot, 868, 670);
 
@@ -26,8 +26,16 @@ public class Main extends Application {
         Scene resultScene = new Scene(resultRoot, 724, 543);
 
         // Set the controller for each FXML file
+        MainController mainController = mainLoader.getController();
         MemberController memberController = memberLoader.getController();
         ResultController resultController = resultLoader.getController();
+
+        mainController.setMemberController(memberController);
+        mainController.setResultController(resultController);
+
+        // Pass stages to controllers if needed
+        resultController.setStage(new Stage());
+        memberController.setStage(new Stage());
 
         // Show the main stage
         primaryStage.setScene(mainScene);
@@ -38,13 +46,13 @@ public class Main extends Application {
         Stage memberStage = new Stage();
         memberStage.setScene(memberScene);
         memberStage.setTitle("Member View");
+        memberController.setStage(memberStage);
         memberStage.show();
 
         // Show the result stage
-        Stage resultStage = new Stage();
+        Stage resultStage = resultController.getStage();
         resultStage.setScene(resultScene);
         resultStage.setTitle("Result View");
-        resultStage.show();
     }
 
     public static void main(String[] args) {

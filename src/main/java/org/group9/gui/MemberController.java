@@ -1,14 +1,15 @@
 package org.group9.gui;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 public class MemberController {
-    @FXML
-    private Label nameLabel1;
+    private Stage stage;
 
-    @FXML
-    private Label nameLabel2;
+    public Stage getStage() {
+        return stage;
+    }
 
-    // Định nghĩa các phương thức xử lý sự kiện và các logic khác ở đây
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 }
