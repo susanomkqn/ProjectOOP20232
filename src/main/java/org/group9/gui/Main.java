@@ -11,9 +11,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load Main.fxml
-        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("Main.fxml"));
-        Parent mainRoot = mainLoader.load();
-        Scene mainScene = new Scene(mainRoot, 868, 670);
+        FXMLLoader helloviewLoader = new FXMLLoader(getClass().getResource("helloview.fxml"));
+        Parent helloviewRoot = helloviewLoader.load();
+        Scene mainScene = new Scene(helloviewRoot, 868, 670);
 
         // Load Member.fxml
         FXMLLoader memberLoader = new FXMLLoader(getClass().getResource("Member.fxml"));
@@ -26,7 +26,7 @@ public class Main extends Application {
         Scene resultScene = new Scene(resultRoot, 724, 543);
 
         // Set the controller for each FXML file
-        MainController mainController = mainLoader.getController();
+        MainController mainController = helloviewLoader.getController();
         MemberController memberController = memberLoader.getController();
         ResultController resultController = resultLoader.getController();
 
