@@ -5,7 +5,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="667.0" prefWidth="925.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, white, #ADD8E6);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.oop.Member">
+<AnchorPane prefHeight="667.0" prefWidth="925.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, white, #ADD8E6);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.group9.gui.MemberController">
     <children>
         <!-- Circles -->
         <Circle fill="#0059ff" layoutX="811.0" layoutY="114.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
@@ -73,7 +73,7 @@
                 <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label layoutX="40.0" layoutY="574.0" prefHeight="40.0" prefWidth="149.0" text="20225142" textAlignment="CENTER" textFill="#1549ed" wrapText="true">
+        <Label layoutX="48.0" layoutY="574.0" prefHeight="40.0" prefWidth="142.0" text="20225168" textFill="#1549ed" wrapText="true">
             <font>
                 <Font name="Times New Roman Bold" size="30.0" />
             </font>
