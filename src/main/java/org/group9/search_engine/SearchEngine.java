@@ -16,7 +16,7 @@ public abstract class SearchEngine {
 
     protected abstract List<String> tokenize(String text);
 
-    public abstract void searchAndPrintResults(String query);
+    public abstract List<News> searchAndPrintResults(String query); // Thay đổi kiểu trả về
 
     protected List<News> getCorpus() {
         return corpus;

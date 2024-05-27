@@ -1,70 +1,113 @@
 package org.group9.gui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.group9.news.News;
+import org.group9.news.CSVReader;
+import org.group9.search_engine.SearchEngine;
+import org.group9.search_engine.BasicSearchEngine;
+import java.util.List;
+
+import java.io.IOException;
 
 public class ResultController {
 
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
+
     @FXML
     private TextField searchField;
+
     @FXML
     private ComboBox<String> sortComboBox;
+
     @FXML
     private Label titleLabel;
+
     @FXML
     private Label dateLabel;
+
     @FXML
     private Label authorLabel;
+
     @FXML
     private Label urlLabel;
+
     @FXML
     private Label detailContentLabel;
-    @FXML
-    private Button backButton;
 
-    private Stage stage;
+    private SearchEngine searchEngine;
 
-    public Stage getStage() {
-        return stage;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public void setResult(String result) {
-        // Parse and display result data in the respective labels
-        titleLabel.setText("Title: Example Title");
-        dateLabel.setText("Date: 2024-05-27");
-        authorLabel.setText("Author: Example Author");
-        urlLabel.setText("Url: http://example.com");
-        detailContentLabel.setText("Detail content: " + result);
-    }
+    private List<News> corpus;
 
     @FXML
-    private void handleBackButtonAction() {
-        if (stage != null) {
-            stage.close();
+    public void initialize() {
+        corpus = CSVReader.readNewsFromCSV("Database.csv");
+        if (corpus != null) {
+            searchEngine = new BasicSearchEngine(corpus);
+            searchEngine.prepareCorpus();
+            sortComboBox.getItems().addAll("Relevance", "Date", "Author");
+            sortComboBox.setValue("Relevance");
+        } else {
+            System.err.println("Error: Corpus could not be loaded.");
         }
     }
 
     @FXML
     private void handleSearchButtonAction() {
-        // Add your search functionality here
+        String query = searchField.getText().trim();
+        List<News> searchResults = searchEngine.searchAndPrintResults(query);
+        if (!searchResults.isEmpty()) {
+            // Hiển thị kết quả đầu tiên
+            displayResult(searchResults.get(0));
+        } else {
+            // Xử lý khi không tìm thấy kết quả
+            titleLabel.setText("Không tìm thấy kết quả.");
+            dateLabel.setText("");
+            authorLabel.setText("");
+            urlLabel.setText("");
+            detailContentLabel.setText("");
+        }
     }
 
-    // Phương thức thực hiện truy vấn và hiển thị kết quả
-    public void performQueryAndDisplayResults() {
-        try {
-            // Thực hiện truy vấn và lấy kết quả, sau đó gọi setResult để hiển thị kết quả
-            String result = "Kết quả giả định"; // Thay dòng này bằng logic thực thi truy vấn thực tế
-            setResult(result);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    @FXML
+    public void displayResult(News news) {
+        titleLabel.setText("Title: " + news.getTitle());
+        dateLabel.setText("Date: " + news.getDate());
+        authorLabel.setText("Author: " + news.getAuthor());
+        urlLabel.setText("Url: " + news.getUrl());
+        detailContentLabel.setText("Detail content: " + truncateDetailContent(news.getDetailContents()));
+    }
+
+
+
+
+    private String truncateDetailContent(String detailContent) {
+        int maxLength = 100; // Maximum length to print
+        if (detailContent.length() <= maxLength) {
+            return detailContent;
+        } else {
+            return detailContent.substring(0, maxLength) + "...";
         }
+    }
+
+    @FXML
+    protected void handleBackButtonAction(ActionEvent event) throws IOException {
+        // Quay trở lại Main.fxml
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/helloview.fxml"));
+        root = loader.load();
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

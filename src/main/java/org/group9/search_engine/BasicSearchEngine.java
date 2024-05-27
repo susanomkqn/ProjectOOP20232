@@ -29,16 +29,11 @@ public class BasicSearchEngine extends SearchEngine {
     }
 
     @Override
-    public void searchAndPrintResults(String query) {
+    public List<News> searchAndPrintResults(String query) {
         List<String> queryTokens = tokenize(query);
         List<Double> scores = getBM25().getScores(tokenizedCorpus, queryTokens);
         List<Double> nonZeroScores = filterNonZeroScores(scores);
-
-        if (!nonZeroScores.isEmpty()) {
-            printSearchResults(scores);
-        } else {
-            System.out.println("No results found.");
-        }
+        return retrieveSearchResults(nonZeroScores);
     }
 
     private List<Double> filterNonZeroScores(List<Double> scores) {
@@ -51,40 +46,15 @@ public class BasicSearchEngine extends SearchEngine {
         return nonZeroScores;
     }
 
-    private void printSearchResults(List<Double> scores) {
-        // Create list of NewsScorePair
-        List<NewsScorePair> newsScorePairs = new ArrayList<>();
-        for (int i = 0; i < getCorpus().size(); i++) {
-            News news = getCorpus().get(i);
-            double score = scores.get(i);
-            newsScorePairs.add(new NewsScorePair(news, score));
-        }
-
-        // Sort list by score in descending order
-        newsScorePairs.sort((pair1, pair2) -> Double.compare(pair2.getScore(), pair1.getScore()));
-
-        // Print results
-        for (NewsScorePair pair : newsScorePairs) {
-            News news = pair.getNews();
-            double score = pair.getScore();
-            if (score != 0.0) { // Only print if score is non-zero
-                System.out.println("Title: " + news.getTitle());
-                System.out.println("URL: " + news.getUrl());
-                System.out.println("Detail Content: " + truncateDetailContent(news.getDetailContents()));
-                System.out.println("Date: " + news.getDate());
-                System.out.println("Author: " + news.getAuthor());
-                System.out.println("Score: " + score);
-                System.out.println();
+    private List<News> retrieveSearchResults(List<Double> nonZeroScores) {
+        List<News> searchResults = new ArrayList<>();
+        int size = Math.min(getCorpus().size(), nonZeroScores.size()); // Sử dụng kích thước nhỏ hơn
+        for (int i = 0; i < size; i++) {
+            double score = nonZeroScores.get(i);
+            if (score != 0.0) { // Only consider non-zero scores
+                searchResults.add(getCorpus().get(i));
             }
         }
-    }
-
-    private String truncateDetailContent(String detailContent) {
-        int maxLength = 100; // Maximum length to print
-        if (detailContent.length() <= maxLength) {
-            return detailContent;
-        } else {
-            return detailContent.substring(0, maxLength) + "...";
-        }
+        return searchResults;
     }
 }
