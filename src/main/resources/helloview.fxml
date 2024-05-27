@@ -22,7 +22,7 @@
                 <HBox layoutX="100.0" layoutY="20.0" spacing="10.0">
                     <children>
                         <Button fx:id="runButton" mnemonicParsing="false" prefHeight="59.0" prefWidth="151.0" style="-fx-background-color: #5AB2FF; -fx-text-fill: black; -fx-font-size: 20px; -fx-background-radius: 10; -fx-border-radius: 10;" text="Run" />
-                        <Button mnemonicParsing="false" prefHeight="59.0" prefWidth="151.0" style="-fx-background-color: #5AB2FF; -fx-text-fill: black; -fx-font-size: 20px; -fx-background-radius: 10; -fx-border-radius: 10;" text="View Data" />
+                        <Button fx:id="memberButton" mnemonicParsing="false" prefHeight="59.0" prefWidth="151.0" style="-fx-background-color: #5AB2FF; -fx-text-fill: black; -fx-font-size: 20px; -fx-background-radius: 10; -fx-border-radius: 10;" text="Member" />
                     </children>
                 </HBox>
                 <Button layoutX="670.0" layoutY="20.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="151.0" style="-fx-background-color: #FF0000; -fx-text-fill: yellow; -fx-font-size: 20px; -fx-background-radius: 10; -fx-border-radius: 10;" text="Exit" />

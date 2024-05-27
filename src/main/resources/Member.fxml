@@ -63,20 +63,5 @@
                 <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label layoutX="745.0" layoutY="574.0" prefHeight="40.0" prefWidth="142.0" text="20225375" textFill="#1549ed" wrapText="true">
-            <font>
-                <Font name="Times New Roman Bold" size="30.0" />
-            </font>
-        </Label>
-        <Label layoutX="392.0" layoutY="574.0" prefHeight="40.0" prefWidth="142.0" text="20225214" textFill="#1549ed" wrapText="true">
-            <font>
-                <Font name="Times New Roman Bold" size="30.0" />
-            </font>
-        </Label>
-        <Label layoutX="48.0" layoutY="574.0" prefHeight="40.0" prefWidth="142.0" text="20225168" textFill="#1549ed" wrapText="true">
-            <font>
-                <Font name="Times New Roman Bold" size="30.0" />
-            </font>
-        </Label>
     </children>
 </AnchorPane>

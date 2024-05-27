@@ -4,13 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import org.group9.search_engine.QueryRunner;
+import javafx.stage.Stage;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,11 +21,19 @@ public class MainController {
 
     private MemberController memberController;
     private ResultController resultController;
+    private Stage stage; // Added Stage
+
     private static final Logger logger = Logger.getLogger(MainController.class.getName());
 
     @FXML
     public void initialize() {
-        runButton.setOnAction(e -> handleRunButtonAction());
+        // Check if memberController is null
+        if (memberController != null) {
+            // Set action for the runButton
+            runButton.setOnAction(e -> handleRunButtonAction());
+        } else {
+            logger.log(Level.WARNING, "MemberController is null. RunButton action not set.");
+        }
     }
 
     private void handleRunButtonAction() {
@@ -60,27 +63,37 @@ public class MainController {
     }
 
     private String runQuery(String query) {
-        InputStream originalSystemIn = System.in;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream originalSystemOut = System.out;
-        System.setIn(new ByteArrayInputStream(query.getBytes(StandardCharsets.UTF_8)));
-        System.setOut(new PrintStream(baos));
+        // Code to run the query
+        return "Dummy result"; // Replace this with actual query execution logic
+    }
 
-        try {
-            QueryRunner.main(new String[0]);
-            System.out.flush();
-            return baos.toString();
-        } finally {
-            System.setIn(originalSystemIn);
-            System.setOut(originalSystemOut);
+    // Setter for the stage
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    // Getter for the runButton
+    public Button getRunButton() {
+        return runButton;
+    }
+
+    // Setter for the memberController
+    public void setMemberController(MemberController memberController) {
+        this.memberController = memberController;
+        // Check if memberController is not null to avoid NullPointerException
+        if (runButton != null) {
+            // Set action for the runButton
+            runButton.setOnAction(e -> handleRunButtonAction());
         }
     }
 
-    public void setMemberController(MemberController memberController) {
-        this.memberController = memberController;
-    }
-
+    // Setter for the resultController
     public void setResultController(ResultController resultController) {
         this.resultController = resultController;
+    }
+
+    // Trong MainController
+    public Button getMemberButton() {
+        return memberController.getMemberButton(); // Thay "getButton()" bằng phương thức thực tế trong MemberController để lấy nút từ MemberController
     }
 }

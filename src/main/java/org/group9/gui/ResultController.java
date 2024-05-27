@@ -56,4 +56,15 @@ public class ResultController {
     private void handleSearchButtonAction() {
         // Add your search functionality here
     }
+
+    // Phương thức thực hiện truy vấn và hiển thị kết quả
+    public void performQueryAndDisplayResults() {
+        try {
+            // Thực hiện truy vấn và lấy kết quả, sau đó gọi setResult để hiển thị kết quả
+            String result = "Kết quả giả định"; // Thay dòng này bằng logic thực thi truy vấn thực tế
+            setResult(result);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

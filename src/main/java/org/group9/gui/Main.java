@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Load Main.fxml
+        // Load Main.fxml (HelloView)
         FXMLLoader helloviewLoader = new FXMLLoader(getClass().getResource("/helloview.fxml"));
         Parent helloviewRoot = helloviewLoader.load();
         Scene mainScene = new Scene(helloviewRoot, 868, 670);
@@ -18,41 +18,48 @@ public class Main extends Application {
         // Load Member.fxml
         FXMLLoader memberLoader = new FXMLLoader(getClass().getResource("/Member.fxml"));
         Parent memberRoot = memberLoader.load();
+        MemberController memberController = memberLoader.getController();
         Scene memberScene = new Scene(memberRoot, 925, 667);
 
         // Load Result.fxml
         FXMLLoader resultLoader = new FXMLLoader(getClass().getResource("/Result.fxml"));
         Parent resultRoot = resultLoader.load();
+        ResultController resultController = resultLoader.getController();
         Scene resultScene = new Scene(resultRoot, 724, 543);
 
-        // Set the controller for each FXML file
+        // Set controllers and stages
         MainController mainController = helloviewLoader.getController();
-        MemberController memberController = memberLoader.getController();
-        ResultController resultController = resultLoader.getController();
-
         mainController.setMemberController(memberController);
         mainController.setResultController(resultController);
+        mainController.setStage(primaryStage);
 
-        // Pass stages to controllers if needed
-        resultController.setStage(new Stage());
         memberController.setStage(new Stage());
+        resultController.setStage(new Stage());
 
-        // Show the main stage
+        // Set up main scene
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("Your Application Title");
+
+        // Show main stage
         primaryStage.show();
 
-        // Show the member stage
-        Stage memberStage = new Stage();
-        memberStage.setScene(memberScene);
-        memberStage.setTitle("Member View");
-        memberController.setStage(memberStage);
-        memberStage.show();
+        // Event handling for switching to Member view
+        mainController.getMemberButton().setOnAction(event -> {
+            Stage memberStage = memberController.getStage();
+            memberStage.setScene(memberScene);
+            memberStage.setTitle("Member View");
+            memberStage.show();
+        });
 
-        // Show the result stage
-        Stage resultStage = resultController.getStage();
-        resultStage.setScene(resultScene);
-        resultStage.setTitle("Result View");
+        // Event handling for switching to Result view
+        mainController.getRunButton().setOnAction(event -> {
+            Stage resultStage = resultController.getStage();
+            resultStage.setScene(resultScene);
+            resultStage.setTitle("Result View");
+            resultStage.show();
+            // Perform any necessary actions in ResultController
+            resultController.performQueryAndDisplayResults();
+        });
     }
 
     public static void main(String[] args) {
