@@ -1,73 +1,99 @@
 package org.group9.scrape;
 
-
-import com.opencsv.CSVWriter;
+import org.group9.scrape.AbstractNewsScraper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsArticle2 {
-    public static void main(String[] args) {
-        String baseUrl = "https://thefintechtimes.com/category/news/blockchain/";
-        String csvFile = "NewsArticle2.csv";
+public class NewsArticle2 extends AbstractNewsScraper {
 
-        try (CSVWriter writer = new CSVWriter(new FileWriter(csvFile))) {
-            String[] headerRecord = {"Title", "URL", "Type", "Date", "Author", "Detail Contents", "TagName", "KeyWord"};
-            writer.writeNext(headerRecord);
+    @Override
+    protected Elements getArticleHeaders(Document doc) {
+        return doc.select(".entry-title");
+    }
 
-            for (int page = 1; page <= 107; page++) {
-                String url = baseUrl + "page/" + page;
-                Document doc = Jsoup.connect(url).get();
+    @Override
+    protected Element getLinkElement(Element articleHeader) {
+        return articleHeader.selectFirst("a[href]");
+    }
 
-                Elements articleHeaders = doc.select(".entry-title");
+    @Override
+    protected String getUrl(Element link) {
+        return link.attr("href");
+    }
 
-                for (Element articleHeader : articleHeaders) {
-                    Element link = articleHeader.selectFirst("a[href]");
-                    String Url = link.attr("href");
-                    String Title = link.text();
-                    String Type = "News Article";
+    @Override
+    protected String getTitle(Element link) {
+        return link.text();
+    }
 
-                    Document document = Jsoup.connect(Url).get();
+    @Override
+    protected Document getArticleDocument(String articleUrl) throws IOException {
+        return Jsoup.connect(articleUrl).get();
+    }
 
-                    Element publishedTime = document.selectFirst("time.entry-date.published");
-                    String Date = publishedTime.text();
+    @Override
+    protected String getDate(Document articleDoc) {
+        Element publishedTime = articleDoc.selectFirst("time.entry-date.published");
+        return publishedTime.text();
+    }
 
-                    Elements authorNames = document.select("span.author.vcard");
-                    List<String> authors = new ArrayList<>();
-                    for (Element authorName : authorNames) {
-                        authors.add(authorName.text());
-                    }
-
-                    Element articleBody = document.selectFirst("div.penci-entry-content.entry-content");
-                    String detailContents = articleBody.text();
-
-                    Elements tag = document.select(".penci-cat-links");
-                    List<String> tags = new ArrayList<>();
-                    for (Element tagName : tag) {
-                        tags.add(tagName.text());
-                    }
-
-                    Elements contentDivs = document.select("div.penci-entry-content.entry-content");
-                    List<String> keyWords = new ArrayList<>();
-                    for (Element div : contentDivs) {
-                        Elements keyWordElements = div.select("a");
-                        for (Element keyWord : keyWordElements) {
-                            keyWords.add(keyWord.text());
-                        }
-                    }
-
-                    String[] dataRecord = {Title, Url, Type, Date, String.join(", ", authors), detailContents, String.join(", ", tags), String.join(", ", keyWords)};
-                    writer.writeNext(dataRecord);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    protected List<String> getAuthors(Document articleDoc) {
+        Elements authorNames = articleDoc.select("span.author.vcard");
+        List<String> authors = new ArrayList<>();
+        for (Element authorName : authorNames) {
+            authors.add(authorName.text());
         }
+        return authors;
+    }
+
+    @Override
+    protected String getDetailContents(Document articleDoc) {
+        Element articleBody = articleDoc.selectFirst("div.penci-entry-content.entry-content");
+        return articleBody.text();
+    }
+
+    @Override
+    protected List<String> getTags(Document articleDoc) {
+        Elements tagElements = articleDoc.select(".penci-cat-links");
+        List<String> tags = new ArrayList<>();
+        for (Element tagName : tagElements) {
+            tags.add(tagName.text());
+        }
+        return tags;
+    }
+
+    @Override
+    protected List<String> getKeyWords(Document articleDoc) {
+        Elements contentDivs = articleDoc.select("div.penci-entry-content.entry-content");
+        List<String> keyWords = new ArrayList<>();
+        for (Element div : contentDivs) {
+            Elements keyWordElements = div.select("a");
+            for (Element keyWord : keyWordElements) {
+                keyWords.add(keyWord.text());
+            }
+        }
+        return keyWords;
+    }
+
+    @Override
+    protected int getMaxPages() {
+        return 107;
+    }
+
+    @Override
+    protected String getPageSuffix(int page) {
+        return "page/" + page;
+    }
+
+    @Override
+    protected String getArticleType() {
+        return "News Article";
     }
 }

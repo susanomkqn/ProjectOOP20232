@@ -1,76 +1,99 @@
 package org.group9.scrape;
 
-import com.opencsv.CSVWriter;
+import org.group9.scrape.AbstractNewsScraper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsArticle {
-    public static void main(String[] args) {
-        String baseUrl = "https://theconversation.com/us/topics/blockchain-11427";
-        String absUrl = "https://theconversation.com";
-        String csvFile = "NewsArticle.csv";
+public class NewsArticle extends AbstractNewsScraper {
 
-        try {
-            try (CSVWriter writer = new CSVWriter(new FileWriter(csvFile))) {
-                String[] headerRecord = {"Title", "URL", "Type", "Date", "Author", "Detail Contents", "TagName", "KeyWord"};
-                writer.writeNext(headerRecord);
+    @Override
+    protected Elements getArticleHeaders(Document doc) {
+        return doc.select(".article--header");
+    }
 
-                for (int page = 1; page <= 20; page++) {
-                    String url = baseUrl + "?page=" + page;
-                    Document doc = Jsoup.connect(url).get();
+    @Override
+    protected Element getLinkElement(Element articleHeader) {
+        return articleHeader.selectFirst("a[href]");
+    }
 
-                    Elements articleHeaders = doc.select(".article--header");
+    @Override
+    protected String getUrl(Element link) {
+        return "https://theconversation.com" + link.attr("href");
+    }
 
-                    for (Element articleHeader : articleHeaders) {
-                        Element link = articleHeader.selectFirst("a[href]");
-                        String Url = link.attr("href");
-                        String Title = link.text();
-                        String Type = "News Article";
+    @Override
+    protected String getTitle(Element link) {
+        return link.text();
+    }
 
-                        String pageUrl = absUrl + Url;
-                        Document document = Jsoup.connect(pageUrl).get();
+    @Override
+    protected Document getArticleDocument(String articleUrl) throws IOException {
+        return Jsoup.connect(articleUrl).get();
+    }
 
-                        Element publishedTime = document.selectFirst("time[itemprop=datePublished]");
-                        String Date = publishedTime.text();
+    @Override
+    protected String getDate(Document articleDoc) {
+        Element publishedTime = articleDoc.selectFirst("time[itemprop=datePublished]");
+        return publishedTime.text();
+    }
 
-                        Elements authorNames = document.select("span.fn.author-name");
-                        List<String> authors = new ArrayList<>();
-                        for (Element authorName : authorNames) {
-                            authors.add(authorName.text());
-                        }
-
-                        Element articleBody = document.selectFirst("div[itemprop=articleBody]");
-                        String detailContents = articleBody.text();
-
-                        Elements tag = document.select(".topic-list-item");
-                        List<String> tags = new ArrayList<>();
-                        for (Element tagName : tag) {
-                            tags.add(tagName.text());
-                        }
-
-                        Elements contentDivs = document.select("div.content-body");
-                        List<String> keyWords = new ArrayList<>();
-                        for (Element div : contentDivs) {
-                            Elements keyWordElements = div.select("a");
-                            for (Element keyWord : keyWordElements) {
-                                keyWords.add(keyWord.text());
-                            }
-                        }
-
-                        String[] dataRecord = {Title, pageUrl, Type, Date, String.join(", ", authors), detailContents, String.join(", ", tags), String.join(", ", keyWords)};
-                        writer.writeNext(dataRecord);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    protected List<String> getAuthors(Document articleDoc) {
+        Elements authorNames = articleDoc.select("span.fn.author-name");
+        List<String> authors = new ArrayList<>();
+        for (Element authorName : authorNames) {
+            authors.add(authorName.text());
         }
+        return authors;
+    }
+
+    @Override
+    protected String getDetailContents(Document articleDoc) {
+        Element articleBody = articleDoc.selectFirst("div[itemprop=articleBody]");
+        return articleBody.text();
+    }
+
+    @Override
+    protected List<String> getTags(Document articleDoc) {
+        Elements tagElements = articleDoc.select(".topic-list-item");
+        List<String> tags = new ArrayList<>();
+        for (Element tagName : tagElements) {
+            tags.add(tagName.text());
+        }
+        return tags;
+    }
+
+    @Override
+    protected List<String> getKeyWords(Document articleDoc) {
+        Elements contentDivs = articleDoc.select("div.content-body");
+        List<String> keyWords = new ArrayList<>();
+        for (Element div : contentDivs) {
+            Elements keyWordElements = div.select("a");
+            for (Element keyWord : keyWordElements) {
+                keyWords.add(keyWord.text());
+            }
+        }
+        return keyWords;
+    }
+
+    @Override
+    protected int getMaxPages() {
+        return 20;
+    }
+
+    @Override
+    protected String getPageSuffix(int page) {
+        return "?page=" + page;
+    }
+
+    @Override
+    protected String getArticleType() {
+        return "News Article";
     }
 }
