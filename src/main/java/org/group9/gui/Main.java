@@ -11,17 +11,17 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load Main.fxml
-        FXMLLoader helloviewLoader = new FXMLLoader(getClass().getResource("helloview.fxml"));
+        FXMLLoader helloviewLoader = new FXMLLoader(getClass().getResource("/helloview.fxml"));
         Parent helloviewRoot = helloviewLoader.load();
         Scene mainScene = new Scene(helloviewRoot, 868, 670);
 
         // Load Member.fxml
-        FXMLLoader memberLoader = new FXMLLoader(getClass().getResource("Member.fxml"));
+        FXMLLoader memberLoader = new FXMLLoader(getClass().getResource("/Member.fxml"));
         Parent memberRoot = memberLoader.load();
         Scene memberScene = new Scene(memberRoot, 925, 667);
 
         // Load Result.fxml
-        FXMLLoader resultLoader = new FXMLLoader(getClass().getResource("Result.fxml"));
+        FXMLLoader resultLoader = new FXMLLoader(getClass().getResource("/Result.fxml"));
         Parent resultRoot = resultLoader.load();
         Scene resultScene = new Scene(resultRoot, 724, 543);
 

@@ -16,7 +16,7 @@
                 <!-- Logo ImageView -->
                 <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../../resource/hust.jpg" />
+                        <Image url="@/hust.jpg" />
                     </image>
                 </ImageView>
                 <HBox layoutX="100.0" layoutY="20.0" spacing="10.0">

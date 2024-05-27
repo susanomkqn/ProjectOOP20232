@@ -1,11 +1,12 @@
-module ProjectOOP20232 {
-    requires javafx.fxml;
+module org.group9.gui {
     requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphics;
+    requires javafx.base;
     requires java.logging;
     requires com.opencsv;
     requires org.jsoup;
+
+    opens org.group9.gui to javafx.fxml;
     exports org.group9.gui;
-    exports org.group9.news;
-    exports org.group9.scrape;
-    exports org.group9.search_engine;
 }
