@@ -5,68 +5,78 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="667.0" prefWidth="925.0" style="-fx-background-color: #211951;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.group9.gui.MemberController">
+<AnchorPane prefHeight="667.0" prefWidth="925.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, white, #ADD8E6);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.oop.Member">
     <children>
-        <Circle fx:id="circle1" fill="#0059ff" layoutX="811.0" layoutY="114.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-        <Circle fx:id="circle2" fill="#00ff22" layoutX="463.0" layoutY="114.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-        <Circle fx:id="circle3" fill="#08edff" layoutX="811.0" layoutY="434.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-        <Circle fx:id="circle4" fill="#c003ff" layoutX="463.0" layoutY="434.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-        <Circle fx:id="circle5" fill="#fdff00" layoutX="115.0" layoutY="434.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-        <Label fx:id="nameLabel1" layoutX="8.0" layoutY="228.0" prefHeight="40.0" prefWidth="213.0" text="Phạm Minh Toàn" textFill="WHITE">
+        <!-- Circles -->
+        <Circle fill="#0059ff" layoutX="811.0" layoutY="114.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+        <Circle fill="#00ff22" layoutX="463.0" layoutY="114.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+        <Circle fill="#08edff" layoutX="811.0" layoutY="434.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+        <Circle fill="#c003ff" layoutX="463.0" layoutY="434.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+        <Circle fill="#fdff00" layoutX="115.0" layoutY="434.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+        <Circle fill="#cd0000" layoutX="114.0" layoutY="114.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+
+        <!-- Labels for names -->
+        <Label layoutX="8.0" layoutY="228.0" prefHeight="40.0" prefWidth="237.0" text="Phạm Minh Toàn" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="nameLabel2" layoutX="356.0" layoutY="228.0" prefHeight="40.0" prefWidth="237.0" text="Chử Quang Thành" textFill="WHITE">
+        <Label layoutX="356.0" layoutY="228.0" prefHeight="40.0" prefWidth="252.0" text="Chử Quang Thành" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="nameLabel3" layoutX="686.0" layoutY="228.0" prefHeight="40.0" prefWidth="260.0" text="Nguyễn Thành Nam" textFill="WHITE">
+        <Label layoutX="686.0" layoutY="228.0" prefHeight="40.0" prefWidth="271.0" text="Nguyễn Thành Nam" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="nameLabel4" layoutX="705.0" layoutY="540.0" prefHeight="40.0" prefWidth="227.0" text="Nguyễn Minh Phú" textFill="WHITE">
+        <Label layoutX="705.0" layoutY="540.0" prefHeight="40.0" prefWidth="237.0" text="Nguyễn Minh Phú" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="nameLabel5" layoutX="328.0" layoutY="540.0" prefHeight="40.0" prefWidth="293.0" text="Nguyễn Thanh Nguyên" textFill="WHITE">
+        <Label layoutX="328.0" layoutY="540.0" prefHeight="40.0" prefWidth="302.0" text="Nguyễn Thanh Nguyên" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="idLabel1" layoutX="48.0" layoutY="268.0" prefHeight="40.0" prefWidth="132.0" text="20225101" textFill="WHITE">
+        <Label layoutX="40.0" layoutY="540.0" prefHeight="40.0" prefWidth="160.0" text="Bùi Gia Lộc" textAlignment="CENTER" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="idLabel2" layoutX="392.0" layoutY="268.0" prefHeight="40.0" prefWidth="142.0" text="20225401" textFill="WHITE">
+
+        <!-- Labels for student IDs -->
+        <Label layoutX="48.0" layoutY="268.0" prefHeight="40.0" prefWidth="132.0" text="20225101" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="idLabel3" layoutX="745.0" layoutY="268.0" prefHeight="40.0" prefWidth="142.0" text="20225145" textFill="WHITE">
+        <Label layoutX="392.0" layoutY="268.0" prefHeight="40.0" prefWidth="142.0" text="20225401" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="idLabel4" layoutX="745.0" layoutY="574.0" prefHeight="40.0" prefWidth="142.0" text="20225375" textFill="WHITE">
+        <Label layoutX="745.0" layoutY="268.0" prefHeight="40.0" prefWidth="142.0" text="20225145" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="idLabel5" layoutX="392.0" layoutY="574.0" prefHeight="40.0" prefWidth="142.0" text="20225214" textFill="WHITE">
+        <Label layoutX="745.0" layoutY="574.0" prefHeight="40.0" prefWidth="142.0" text="20225375" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Label fx:id="idLabel6" layoutX="40.0" layoutY="574.0" prefHeight="40.0" prefWidth="149.0" text="20225142" textAlignment="CENTER" textFill="WHITE">
+        <Label layoutX="392.0" layoutY="574.0" prefHeight="40.0" prefWidth="142.0" text="20225214" textFill="#1549ed" wrapText="true">
             <font>
-                <Font name="System Bold" size="30.0" />
+                <Font name="Times New Roman Bold" size="30.0" />
             </font>
         </Label>
-        <Circle fx:id="circle6" fill="#cd0000" layoutX="114.0" layoutY="114.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+        <Label layoutX="40.0" layoutY="574.0" prefHeight="40.0" prefWidth="149.0" text="20225142" textAlignment="CENTER" textFill="#1549ed" wrapText="true">
+            <font>
+                <Font name="Times New Roman Bold" size="30.0" />
+            </font>
+        </Label>
     </children>
 </AnchorPane>
