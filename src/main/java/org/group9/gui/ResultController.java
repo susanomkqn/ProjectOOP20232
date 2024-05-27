@@ -12,11 +12,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.group9.news.News;
 import org.group9.news.CSVReader;
-import org.group9.search_engine.SearchEngine;
 import org.group9.search_engine.BasicSearchEngine;
-import java.util.List;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ResultController {
 
@@ -45,7 +44,7 @@ public class ResultController {
     @FXML
     private Label detailContentLabel;
 
-    private SearchEngine searchEngine;
+    private BasicSearchEngine searchEngine;
 
     private List<News> corpus;
 
@@ -63,33 +62,32 @@ public class ResultController {
     }
 
     @FXML
-    private void handleSearchButtonAction() {
+    private void handleSearchButtonAction(ActionEvent event) {
         String query = searchField.getText().trim();
-        List<News> searchResults = searchEngine.searchAndPrintResults(query);
-        if (!searchResults.isEmpty()) {
-            // Hiển thị kết quả đầu tiên
-            displayResult(searchResults.get(0));
+        if (searchEngine != null) {
+            List<News> searchResults = searchEngine.searchAndPrintResults(query); // Sử dụng phương thức search
+            displayFirstResult(searchResults);
         } else {
-            // Xử lý khi không tìm thấy kết quả
-            titleLabel.setText("Không tìm thấy kết quả.");
+            System.err.println("Error: Search engine is not initialized.");
+        }
+    }
+
+    private void displayFirstResult(List<News> results) {
+        if (results != null && !results.isEmpty()) {
+            News firstResult = results.get(0);
+            titleLabel.setText("Title: " + firstResult.getTitle());
+            dateLabel.setText("Date: " + firstResult.getDate());
+            authorLabel.setText("Author: " + firstResult.getAuthor());
+            urlLabel.setText("URL: " + firstResult.getUrl());
+            detailContentLabel.setText("Detail content: " + truncateDetailContent(firstResult.getDetailContents()));
+        } else {
+            titleLabel.setText("No results found.");
             dateLabel.setText("");
             authorLabel.setText("");
             urlLabel.setText("");
             detailContentLabel.setText("");
         }
     }
-
-    @FXML
-    public void displayResult(News news) {
-        titleLabel.setText("Title: " + news.getTitle());
-        dateLabel.setText("Date: " + news.getDate());
-        authorLabel.setText("Author: " + news.getAuthor());
-        urlLabel.setText("Url: " + news.getUrl());
-        detailContentLabel.setText("Detail content: " + truncateDetailContent(news.getDetailContents()));
-    }
-
-
-
 
     private String truncateDetailContent(String detailContent) {
         int maxLength = 100; // Maximum length to print
@@ -102,10 +100,9 @@ public class ResultController {
 
     @FXML
     protected void handleBackButtonAction(ActionEvent event) throws IOException {
-        // Quay trở lại Main.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/helloview.fxml"));
         root = loader.load();
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
