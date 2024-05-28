@@ -32,29 +32,44 @@ public class BasicSearchEngine extends SearchEngine {
     public List<News> searchAndPrintResults(String query) {
         List<String> queryTokens = tokenize(query);
         List<Double> scores = getBM25().getScores(tokenizedCorpus, queryTokens);
-        List<Double> nonZeroScores = filterNonZeroScores(scores);
-        return retrieveSearchResults(nonZeroScores);
-    }
 
-    private List<Double> filterNonZeroScores(List<Double> scores) {
-        List<Double> nonZeroScores = new ArrayList<>();
-        for (Double score : scores) {
+        // Create list of NewsScorePair
+        List<NewsScorePair> newsScorePairs = new ArrayList<>();
+        for (int i = 0; i < getCorpus().size(); i++) {
+            News news = getCorpus().get(i);
+            double score = scores.get(i);
             if (score != 0.0) {
-                nonZeroScores.add(score);
+                newsScorePairs.add(new NewsScorePair(news, score));
             }
         }
-        return nonZeroScores;
+
+        // Sort list by score in descending order
+        newsScorePairs.sort((pair1, pair2) -> Double.compare(pair2.getScore(), pair1.getScore()));
+
+        // Retrieve the sorted list of News articles
+        List<News> searchResults = new ArrayList<>();
+        for (NewsScorePair pair : newsScorePairs) {
+            searchResults.add(pair.getNews());
+        }
+
+        return searchResults;
     }
 
-    private List<News> retrieveSearchResults(List<Double> nonZeroScores) {
-        List<News> searchResults = new ArrayList<>();
-        int size = Math.min(getCorpus().size(), nonZeroScores.size()); // Sử dụng kích thước nhỏ hơn
-        for (int i = 0; i < size; i++) {
-            double score = nonZeroScores.get(i);
-            if (score != 0.0) { // Only consider non-zero scores
-                searchResults.add(getCorpus().get(i));
-            }
+    private static class NewsScorePair {
+        private final News news;
+        private final double score;
+
+        public NewsScorePair(News news, double score) {
+            this.news = news;
+            this.score = score;
         }
-        return searchResults;
+
+        public News getNews() {
+            return news;
+        }
+
+        public double getScore() {
+            return score;
+        }
     }
 }

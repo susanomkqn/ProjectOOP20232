@@ -9,13 +9,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.group9.news.News;
 import org.group9.news.CSVReader;
 import org.group9.search_engine.BasicSearchEngine;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResultController {
 
@@ -30,19 +34,7 @@ public class ResultController {
     private ComboBox<String> sortComboBox;
 
     @FXML
-    private Label titleLabel;
-
-    @FXML
-    private Label dateLabel;
-
-    @FXML
-    private Label authorLabel;
-
-    @FXML
-    private Label urlLabel;
-
-    @FXML
-    private Label detailContentLabel;
+    private VBox resultsVBox; // Reference to VBox in result.fxml
 
     private BasicSearchEngine searchEngine;
 
@@ -66,27 +58,61 @@ public class ResultController {
         String query = searchField.getText().trim();
         if (searchEngine != null) {
             List<News> searchResults = searchEngine.searchAndPrintResults(query); // Sử dụng phương thức search
-            displayFirstResult(searchResults);
+            sortResults(searchResults); // Sort results based on selected criteria
+            displayResults(searchResults); // Display sorted results
         } else {
             System.err.println("Error: Search engine is not initialized.");
         }
     }
 
-    private void displayFirstResult(List<News> results) {
+    private void displayResults(List<News> results) {
+        resultsVBox.getChildren().clear(); // Clear previous results
         if (results != null && !results.isEmpty()) {
-            News firstResult = results.get(0);
-            titleLabel.setText("Title: " + firstResult.getTitle());
-            dateLabel.setText("Date: " + firstResult.getDate());
-            authorLabel.setText("Author: " + firstResult.getAuthor());
-            urlLabel.setText("URL: " + firstResult.getUrl());
-            detailContentLabel.setText("Detail content: " + truncateDetailContent(firstResult.getDetailContents()));
+            for (News news : results) {
+                AnchorPane resultPane = createResultPane(news);
+                resultsVBox.getChildren().add(resultPane);
+            }
         } else {
-            titleLabel.setText("No results found.");
-            dateLabel.setText("");
-            authorLabel.setText("");
-            urlLabel.setText("");
-            detailContentLabel.setText("");
+            Label noResultsLabel = new Label("No results found.");
+            noResultsLabel.setStyle("-fx-text-fill: black; -fx-font-size: 16;");
+            resultsVBox.getChildren().add(noResultsLabel);
         }
+    }
+
+    private AnchorPane createResultPane(News news) {
+        AnchorPane pane = new AnchorPane();
+        pane.setStyle("-fx-background-radius: 20; -fx-background-color: #AFEEEE; -fx-border-radius: 15;");
+        pane.setPrefHeight(150.0);
+        pane.setPrefWidth(700.0);
+
+        Label titleLabel = new Label("Title: " + news.getTitle());
+        titleLabel.setLayoutX(14.0);
+        titleLabel.setLayoutY(10.0);
+        titleLabel.setStyle("-fx-text-fill: black; -fx-font-size: 20;");
+
+        Label dateLabel = new Label("Date: " + news.getDate());
+        dateLabel.setLayoutX(14.0);
+        dateLabel.setLayoutY(40.0);
+        dateLabel.setStyle("-fx-text-fill: black;");
+
+        Label authorLabel = new Label("Author: " + news.getAuthor());
+        authorLabel.setLayoutX(14.0);
+        authorLabel.setLayoutY(70.0);
+        authorLabel.setStyle("-fx-text-fill: black;");
+
+        Label urlLabel = new Label("URL: " + news.getUrl());
+        urlLabel.setLayoutX(14.0);
+        urlLabel.setLayoutY(100.0);
+        urlLabel.setStyle("-fx-text-fill: black;");
+
+        Label detailContentLabel = new Label("Detail content: " + truncateDetailContent(news.getDetailContents()));
+        detailContentLabel.setLayoutX(14.0);
+        detailContentLabel.setLayoutY(130.0);
+        detailContentLabel.setStyle("-fx-text-fill: black;");
+
+        pane.getChildren().addAll(titleLabel, dateLabel, authorLabel, urlLabel, detailContentLabel);
+
+        return pane;
     }
 
     private String truncateDetailContent(String detailContent) {
@@ -106,5 +132,16 @@ public class ResultController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void sortResults(List<News> results) {
+        String sortBy = sortComboBox.getValue();
+        if ("Date".equals(sortBy)) {
+            results.sort(Comparator.comparing(News::getDate).reversed());
+        } else if ("Author".equals(sortBy)) {
+            results.sort(Comparator.comparing(News::getAuthor));
+        } else {
+            // Default: Sort by Relevance (no additional sorting needed)
+        }
     }
 }
