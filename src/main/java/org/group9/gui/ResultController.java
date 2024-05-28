@@ -43,15 +43,24 @@ public class ResultController {
     private BasicSearchEngine searchEngine;
 
     private List<News> corpus;
+    private List<News> currentSearchResults;
 
     @FXML
     public void initialize() {
-        corpus = CSVReader.readNewsFromCSV("Database.csv");
+        corpus = CSVReader.readNewsFromCSV("DataBase.csv");
         if (corpus != null) {
             searchEngine = new BasicSearchEngine(corpus);
             searchEngine.prepareCorpus();
             sortComboBox.getItems().addAll("Relevance", "Date", "Author");
             sortComboBox.setValue("Relevance");
+
+            // Add listener to sortComboBox
+            sortComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (currentSearchResults != null) {
+                    sortResults(currentSearchResults); // Sort current results based on the new criteria
+                    displayResults(currentSearchResults); // Display sorted results
+                }
+            });
         } else {
             System.err.println("Error: Corpus could not be loaded.");
         }
@@ -61,9 +70,9 @@ public class ResultController {
     private void handleSearchButtonAction(ActionEvent event) {
         String query = searchField.getText().trim();
         if (searchEngine != null) {
-            List<News> searchResults = searchEngine.searchAndPrintResults(query); // Sử dụng phương thức search
-            sortResults(searchResults); // Sort results based on selected criteria
-            displayResults(searchResults); // Display sorted results
+            currentSearchResults = searchEngine.searchAndPrintResults(query); // Store search results
+            sortResults(currentSearchResults); // Sort results based on selected criteria
+            displayResults(currentSearchResults); // Display sorted results
         } else {
             System.err.println("Error: Search engine is not initialized.");
         }
