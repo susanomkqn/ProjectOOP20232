@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -16,13 +17,14 @@ import org.group9.news.News;
 import org.group9.news.CSVReader;
 import org.group9.search_engine.BasicSearchEngine;
 
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import javafx.scene.control.Hyperlink;
 import java.awt.Desktop;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ResultController {
 
@@ -37,7 +39,7 @@ public class ResultController {
     private ComboBox<String> sortComboBox;
 
     @FXML
-    private VBox resultsVBox; // Tham chiếu tới VBox trong result.fxml
+    private VBox resultsVBox;
 
     private BasicSearchEngine searchEngine;
 
@@ -53,11 +55,10 @@ public class ResultController {
             sortComboBox.getItems().addAll("Relevance", "Date", "Author");
             sortComboBox.setValue("Relevance");
 
-            // Thêm listener vào ComboBox
             sortComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
                 if (currentSearchResults != null) {
-                    sortResults(currentSearchResults); // Sắp xếp kết quả hiện tại dựa trên tiêu chí mới
-                    displayResults(currentSearchResults); // Hiển thị kết quả đã sắp xếp
+                    sortResults(currentSearchResults);
+                    displayResults(currentSearchResults);
                 }
             });
         } else {
@@ -70,19 +71,19 @@ public class ResultController {
         String query = searchField.getText().trim();
         if (searchEngine != null) {
             if ("Author".equals(sortComboBox.getValue())) {
-                currentSearchResults = searchEngine.searchByAuthor(query); // Tìm kiếm theo tên tác giả
+                currentSearchResults = searchEngine.searchByAuthor(query);
             } else {
-                currentSearchResults = searchEngine.searchAndPrintResults(query); // Tìm kiếm theo tiêu chí khác
+                currentSearchResults = searchEngine.searchAndPrintResults(query);
             }
-            sortResults(currentSearchResults); // Sắp xếp kết quả dựa trên tiêu chí đã chọn
-            displayResults(currentSearchResults); // Hiển thị kết quả đã sắp xếp
+            sortResults(currentSearchResults);
+            displayResults(currentSearchResults);
         } else {
             System.err.println("Lỗi: Không thể khởi tạo máy tìm kiếm.");
         }
     }
 
     private void displayResults(List<News> results) {
-        resultsVBox.getChildren().clear(); // Xóa kết quả trước đó
+        resultsVBox.getChildren().clear();
         if (results != null && !results.isEmpty()) {
             for (News news : results) {
                 AnchorPane resultPane = createResultPane(news);
@@ -139,7 +140,7 @@ public class ResultController {
     }
 
     private String truncateDetailContent(String detailContent) {
-        int maxLength = 100; // Độ dài tối đa để hiển thị
+        int maxLength = 100;
         if (detailContent.length() <= maxLength) {
             return detailContent;
         } else {
@@ -160,11 +161,22 @@ public class ResultController {
     private void sortResults(List<News> results) {
         String sortBy = sortComboBox.getValue();
         if ("Date".equals(sortBy)) {
-            results.sort(Comparator.comparing(News::getDate).reversed());
+            results.sort((news1, news2) -> {
+                Date date1 = news1.getParsedDate();
+                Date date2 = news2.getParsedDate();
+
+                if (date1 == null && date2 == null) {
+                    return 0;
+                } else if (date1 == null) {
+                    return 1;
+                } else if (date2 == null) {
+                    return -1;
+                } else {
+                    return date2.compareTo(date1); // Descending order
+                }
+            });
         } else if ("Author".equals(sortBy)) {
             results.sort(Comparator.comparing(News::getAuthor));
-        } else {
-            // Default: Sort by Relevance (no additional sorting needed)
         }
     }
 }

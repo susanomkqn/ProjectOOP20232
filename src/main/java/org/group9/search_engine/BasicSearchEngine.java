@@ -1,9 +1,12 @@
 package org.group9.search_engine;
 
 import org.group9.news.News;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class BasicSearchEngine extends SearchEngine {
     private List<List<String>> tokenizedCorpus;
@@ -33,7 +36,6 @@ public class BasicSearchEngine extends SearchEngine {
         List<String> queryTokens = tokenize(query);
         List<Double> scores = getBM25().getScores(tokenizedCorpus, queryTokens);
 
-        // Create list of NewsScorePair
         List<NewsScorePair> newsScorePairs = new ArrayList<>();
         for (int i = 0; i < getCorpus().size(); i++) {
             News news = getCorpus().get(i);
@@ -43,10 +45,8 @@ public class BasicSearchEngine extends SearchEngine {
             }
         }
 
-        // Sort list by score in descending order
         newsScorePairs.sort((pair1, pair2) -> Double.compare(pair2.getScore(), pair1.getScore()));
 
-        // Retrieve the sorted list of News articles
         List<News> searchResults = new ArrayList<>();
         for (NewsScorePair pair : newsScorePairs) {
             searchResults.add(pair.getNews());
@@ -57,13 +57,19 @@ public class BasicSearchEngine extends SearchEngine {
 
     public List<News> searchByAuthor(String authorQuery) {
         List<News> searchResults = new ArrayList<>();
-        String lowerCaseQuery = authorQuery.toLowerCase();
+        String lowerCaseQuery = authorQuery.toLowerCase(Locale.ROOT);
         for (News news : getCorpus()) {
-            if (news.getAuthor().toLowerCase().contains(lowerCaseQuery)) {
+            if (news.getAuthor().toLowerCase(Locale.ROOT).contains(lowerCaseQuery)) {
                 searchResults.add(news);
             }
         }
         return searchResults;
+    }
+
+    public List<News> sortByDateDescending() {
+        List<News> sortedNews = new ArrayList<>(getCorpus());
+        sortedNews.sort(Comparator.comparing(News::getParsedDate).reversed());
+        return sortedNews;
     }
 
     private static class NewsScorePair {

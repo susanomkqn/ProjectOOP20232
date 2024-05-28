@@ -1,10 +1,12 @@
 package org.group9.news;
 
 import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvBindAndSplitByName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class News {
     @CsvBindByName(column = "Title")
@@ -20,24 +22,21 @@ public class News {
     private String author;
 
     @CsvBindByName(column = "Date")
-    private String date; // Giữ nguyên dưới dạng String hoặc chuyển đổi thành Date
+    private String date;
 
     @CsvBindByName(column = "TagName")
     private String tagname;
 
     @CsvBindByName(column = "Keyword")
-    private String keyword; // Có thể cần xử lý trước khi gán vào đối tượng
+    private String keyword;
 
     @CsvBindByName(column = "Detail Contents")
-    private String detailContents; // Có thể cần xử lý trước khi gán vào đối tượng
+    private String detailContents;
 
     private List<String> tokens;
 
-    // Constructor
     public News() {
     }
-
-    // Getter và Setter cho các thuộc tính
 
     public void setTokens(List<String> tokens) {
         this.tokens = tokens;
@@ -83,12 +82,9 @@ public class News {
         return date;
     }
 
-    // Phương thức để chuyển đổi định dạng ngày tháng từ chuỗi sang Date hoặc LocalDateTime
-
     public void setDate(String date) {
         this.date = date;
     }
-
 
     public String getTagname() {
         return tagname;
@@ -102,20 +98,35 @@ public class News {
         return keyword;
     }
 
-    // Có thể cần xử lý trước khi gán vào thuộc tính keyword
-
     public void setKeyword(String keyword) {
-        // Thực hiện xử lý keyword trước khi gán vào thuộc tính keyword
+        this.keyword = keyword;
     }
 
     public String getDetailContents() {
         return detailContents;
     }
 
-    // Có thể cần xử lý trước khi gán vào thuộc tính detailContents
-
     public void setDetailContents(String detailContents) {
         this.detailContents = detailContents;
     }
 
+    public Date getParsedDate() {
+        String[] dateFormats = {
+                "MMMM d, yyyy h.mma z", // Format with time and time zone
+                "MMMM d, yyyy"          // Format without time and time zone
+        };
+
+        for (String format : dateFormats) {
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
+            try {
+                // Remove "Published: " prefix if present
+                String dateStr = date.replace("Published: ", "").trim();
+                return sdf.parse(dateStr);
+            } catch (ParseException e) {
+                // Try the next format
+            }
+        }
+        // If none of the formats work, return null or handle the error as appropriate
+        return null;
+    }
 }
