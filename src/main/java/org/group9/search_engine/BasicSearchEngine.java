@@ -55,6 +55,17 @@ public class BasicSearchEngine extends SearchEngine {
         return searchResults;
     }
 
+    public List<News> searchByAuthor(String authorQuery) {
+        List<News> searchResults = new ArrayList<>();
+        String lowerCaseQuery = authorQuery.toLowerCase();
+        for (News news : getCorpus()) {
+            if (news.getAuthor().toLowerCase().contains(lowerCaseQuery)) {
+                searchResults.add(news);
+            }
+        }
+        return searchResults;
+    }
+
     private static class NewsScorePair {
         private final News news;
         private final double score;

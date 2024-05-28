@@ -19,7 +19,6 @@ import org.group9.search_engine.BasicSearchEngine;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import javafx.scene.control.Hyperlink;
 import java.awt.Desktop;
 import java.net.URI;
@@ -38,7 +37,7 @@ public class ResultController {
     private ComboBox<String> sortComboBox;
 
     @FXML
-    private VBox resultsVBox; // Reference to VBox in result.fxml
+    private VBox resultsVBox; // Tham chiếu tới VBox trong result.fxml
 
     private BasicSearchEngine searchEngine;
 
@@ -54,15 +53,15 @@ public class ResultController {
             sortComboBox.getItems().addAll("Relevance", "Date", "Author");
             sortComboBox.setValue("Relevance");
 
-            // Add listener to sortComboBox
+            // Thêm listener vào ComboBox
             sortComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
                 if (currentSearchResults != null) {
-                    sortResults(currentSearchResults); // Sort current results based on the new criteria
-                    displayResults(currentSearchResults); // Display sorted results
+                    sortResults(currentSearchResults); // Sắp xếp kết quả hiện tại dựa trên tiêu chí mới
+                    displayResults(currentSearchResults); // Hiển thị kết quả đã sắp xếp
                 }
             });
         } else {
-            System.err.println("Error: Corpus could not be loaded.");
+            System.err.println("Lỗi: Không thể tải dữ liệu.");
         }
     }
 
@@ -70,23 +69,27 @@ public class ResultController {
     private void handleSearchButtonAction(ActionEvent event) {
         String query = searchField.getText().trim();
         if (searchEngine != null) {
-            currentSearchResults = searchEngine.searchAndPrintResults(query); // Store search results
-            sortResults(currentSearchResults); // Sort results based on selected criteria
-            displayResults(currentSearchResults); // Display sorted results
+            if ("Author".equals(sortComboBox.getValue())) {
+                currentSearchResults = searchEngine.searchByAuthor(query); // Tìm kiếm theo tên tác giả
+            } else {
+                currentSearchResults = searchEngine.searchAndPrintResults(query); // Tìm kiếm theo tiêu chí khác
+            }
+            sortResults(currentSearchResults); // Sắp xếp kết quả dựa trên tiêu chí đã chọn
+            displayResults(currentSearchResults); // Hiển thị kết quả đã sắp xếp
         } else {
-            System.err.println("Error: Search engine is not initialized.");
+            System.err.println("Lỗi: Không thể khởi tạo máy tìm kiếm.");
         }
     }
 
     private void displayResults(List<News> results) {
-        resultsVBox.getChildren().clear(); // Clear previous results
+        resultsVBox.getChildren().clear(); // Xóa kết quả trước đó
         if (results != null && !results.isEmpty()) {
             for (News news : results) {
                 AnchorPane resultPane = createResultPane(news);
                 resultsVBox.getChildren().add(resultPane);
             }
         } else {
-            Label noResultsLabel = new Label("No results found.");
+            Label noResultsLabel = new Label("Không tìm thấy kết quả.");
             noResultsLabel.setStyle("-fx-text-fill: black; -fx-font-size: 16;");
             resultsVBox.getChildren().add(noResultsLabel);
         }
@@ -98,17 +101,17 @@ public class ResultController {
         pane.setPrefHeight(150.0);
         pane.setPrefWidth(700.0);
 
-        Label titleLabel = new Label("Title: " + news.getTitle());
+        Label titleLabel = new Label("Tiêu đề: " + news.getTitle());
         titleLabel.setLayoutX(14.0);
         titleLabel.setLayoutY(10.0);
         titleLabel.setStyle("-fx-text-fill: black; -fx-font-size: 20;");
 
-        Label dateLabel = new Label("Date: " + news.getDate());
+        Label dateLabel = new Label("Ngày: " + news.getDate());
         dateLabel.setLayoutX(14.0);
         dateLabel.setLayoutY(40.0);
         dateLabel.setStyle("-fx-text-fill: black;");
 
-        Label authorLabel = new Label("Author: " + news.getAuthor());
+        Label authorLabel = new Label("Tác giả: " + news.getAuthor());
         authorLabel.setLayoutX(14.0);
         authorLabel.setLayoutY(70.0);
         authorLabel.setStyle("-fx-text-fill: black;");
@@ -125,7 +128,7 @@ public class ResultController {
             }
         });
 
-        Label detailContentLabel = new Label("Detail content: " + truncateDetailContent(news.getDetailContents()));
+        Label detailContentLabel = new Label("Nội dung chi tiết: " + truncateDetailContent(news.getDetailContents()));
         detailContentLabel.setLayoutX(14.0);
         detailContentLabel.setLayoutY(130.0);
         detailContentLabel.setStyle("-fx-text-fill: black;");
@@ -135,9 +138,8 @@ public class ResultController {
         return pane;
     }
 
-
     private String truncateDetailContent(String detailContent) {
-        int maxLength = 100; // Maximum length to print
+        int maxLength = 100; // Độ dài tối đa để hiển thị
         if (detailContent.length() <= maxLength) {
             return detailContent;
         } else {
