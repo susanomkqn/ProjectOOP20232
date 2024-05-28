@@ -12,6 +12,7 @@ module org.group9.gui {
     requires org.jsoup;
     requires java.sql;
     requires com.opencsv;
+    requires java.desktop;
 
     exports org.group9.gui;
     opens org.group9.gui to javafx.fxml;

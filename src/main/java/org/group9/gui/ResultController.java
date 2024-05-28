@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.scene.control.Hyperlink;
+import java.awt.Desktop;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class ResultController {
 
@@ -100,20 +104,28 @@ public class ResultController {
         authorLabel.setLayoutY(70.0);
         authorLabel.setStyle("-fx-text-fill: black;");
 
-        Label urlLabel = new Label("URL: " + news.getUrl());
-        urlLabel.setLayoutX(14.0);
-        urlLabel.setLayoutY(100.0);
-        urlLabel.setStyle("-fx-text-fill: black;");
+        Hyperlink urlHyperlink = new Hyperlink("URL: " + news.getUrl());
+        urlHyperlink.setLayoutX(14.0);
+        urlHyperlink.setLayoutY(100.0);
+        urlHyperlink.setStyle("-fx-text-fill: blue;");
+        urlHyperlink.setOnAction(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI(news.getUrl()));
+            } catch (IOException | URISyntaxException ex) {
+                ex.printStackTrace();
+            }
+        });
 
         Label detailContentLabel = new Label("Detail content: " + truncateDetailContent(news.getDetailContents()));
         detailContentLabel.setLayoutX(14.0);
         detailContentLabel.setLayoutY(130.0);
         detailContentLabel.setStyle("-fx-text-fill: black;");
 
-        pane.getChildren().addAll(titleLabel, dateLabel, authorLabel, urlLabel, detailContentLabel);
+        pane.getChildren().addAll(titleLabel, dateLabel, authorLabel, urlHyperlink, detailContentLabel);
 
         return pane;
     }
+
 
     private String truncateDetailContent(String detailContent) {
         int maxLength = 100; // Maximum length to print
